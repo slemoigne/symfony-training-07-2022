@@ -1,0 +1,30 @@
+security:
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    password_hashers:
+        App\Entity\User:
+            algorithm: auto
+
+    providers:
+        app_user_provider:
+            entity:
+                class: App\Entity\User
+                property: email
+
+    firewalls:
+        dev:
+            pattern: ^/(_(profiler|wdt)|build|css|images|js)/
+            security: false
+        main:
+            lazy: true
+            custom_authenticator: App\Security\AppCustomAuthenticator
+            logout:
+                path: app_logout
+
+
+
+    access_control:
+        - { path: '^/login', roles: PUBLIC_ACCESS }
+        - { path: '^/admin', roles: ROLE_ADMIN }
